@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контент-план · Кератин & Ботокс</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0d0b;
+    --surface: #1a1612;
+    --surface2: #231f1a;
+    --border: rgba(255,255,255,0.07);
+    --gold: #c9a96e;
+    --gold-light: #e8d5a3;
+    --gold-dim: rgba(201,169,110,0.15);
+    --cream: #f5efe6;
+    --muted: rgba(245,239,230,0.45);
+    --faint: rgba(245,239,230,0.12);
+    --sales: #c9a96e;
+    --trust: #8bbf9f;
+    --reach: #bf9f8b;
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --radius: 14px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* ── Noise texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Background gradient orbs ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: min(400px,60vw); height: min(400px,60vw); background: rgba(201,169,110,0.07); top: -80px; right: -80px; }
+  .orb-2 { width: min(320px,50vw); height: min(320px,50vw); background: rgba(139,191,159,0.05); bottom: 200px; left: -80px; }
+
+  /* ── Header ── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 80px 24px 60px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .header-label {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-label::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 8vw, 80px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--cream);
+    margin-bottom: 28px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 13px;
+    border: 0.5px solid var(--border);
+    border-radius: 40px;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--surface);
+    white-space: nowrap;
+  }
+  .meta-chip .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    max-width: 860px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 10;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .legend-swatch {
+    width: 24px; height: 3px; border-radius: 2px;
+  }
+
+  /* ── Days grid ── */
+  .days {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* ── Day card ── */
+  .day-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .day-card:hover { border-color: rgba(201,169,110,0.25); }
+  .day-card.open { border-color: rgba(201,169,110,0.3); box-shadow: 0 0 0 1px rgba(201,169,110,0.06) inset; }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    user-select: none;
+    min-width: 0;
+  }
+
+  .day-num {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    width: 36px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .day-divider {
+    width: 1px;
+    height: 36px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .day-info { flex: 1; min-width: 0; }
+  .day-weekday {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  .day-theme {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--cream);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .day-goals {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .goal-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .goal-sales { background: rgba(201,169,110,0.12); color: var(--sales); }
+  .goal-trust { background: rgba(139,191,159,0.12); color: var(--trust); }
+  .goal-reach { background: rgba(191,159,139,0.12); color: var(--reach); }
+
+  .day-arrow {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    border: 0.5px solid var(--border);
+    flex-shrink: 0;
+    transition: transform 0.3s, background 0.2s;
+  }
+  .day-arrow svg { width: 12px; height: 12px; stroke: var(--muted); fill: none; transition: stroke 0.2s; }
+  .day-card.open .day-arrow { transform: rotate(180deg); background: var(--gold-dim); }
+  .day-card.open .day-arrow svg { stroke: var(--gold); }
+
+  /* ── Day body ── */
+  .day-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .day-body-inner {
+    padding: 4px 22px 22px;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  @media (max-width: 580px) { .body-grid { grid-template-columns: 1fr; } }
+
+  .body-cell {
+    background: var(--surface2);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .body-cell.full { grid-column: 1 / -1; }
+
+  .cell-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .cell-value {
+    font-size: 13.5px;
+    color: var(--cream);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .format-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gold-dim);
+    color: var(--gold-light);
+    border: 0.5px solid rgba(201,169,110,0.25);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .cta-box {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(139,191,159,0.06);
+    border: 0.5px solid rgba(139,191,159,0.2);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--trust);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .cta-icon { flex-shrink: 0; margin-top: 1px; font-size: 14px; }
+
+  /* ── Footer ── */
+  footer {
+    position: relative;
+    z-index: 10;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-top: 0.5px solid var(--border);
+    padding-top: 32px;
+  }
+  .footer-line {
+    width: 28px; height: 1px; background: var(--gold);
+  }
+  .footer-text {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  /* ── Staggered entrance ── */
+  .day-card {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Progress bar ── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    z-index: 100;
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  @media (max-width: 500px) {
+    .day-goals { display: none; }
+    .day-theme { font-size: 16px; }
+    .day-divider { display: none; }
+    .day-header { gap: 10px; padding: 14px 16px; }
+    .day-body-inner { padding: 4px 16px 18px; }
+    header { padding: 50px 16px 40px; }
+    .days { padding: 0 16px 60px; }
+    footer { padding: 24px 16px 40px; }
+    h1 { font-size: clamp(36px, 10vw, 56px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<header>
+  <div class="header-label">SMM · Instagram · 7 Днів</div>
+  <h1>Контент-план<br><em>Кератин & Ботокс</em></h1>
+  <p style="font-size:15px; color:var(--muted); max-width:480px; line-height:1.7;">
+    Стратегія для ніші кератин / ботокс / холодне відновлення. Аудиторія 16–35 років. Мета — продажі, охоплення, довіра.
+  </p>
+  <div class="header-meta">
+    <div class="meta-chip"><div class="dot" style="background:var(--sales)"></div>Продажі</div>
+    <div class="meta-chip"><div class="dot" style="background:var(--trust)"></div>Довіра</div>
+    <div class="meta-chip"><div class="dot" style="background:var(--reach)"></div>Охоплення</div>
+    <div class="meta-chip" style="color:var(--muted);">📍 Instagram · Reels & Stories</div>
+  </div>
+</header>
+
+<div class="days" id="days"></div>
+
+<footer>
+  <div class="footer-line"></div>
+  <p class="footer-text">Прогрів → Довіра → Продаж → Відпочинок — формула тижня</p>
+</footer>
+
+<script>
+const data = [
+  {
+    day: "01", weekday: "Понеділок",
+    theme: "Проблема — гачок",
+    goals: ["reach","trust"],
+    format: "Reels · 15 сек",
+    content: "«Чому твоє волосся не слухається навіть після дорогого шампуню?» — коротке відео з трансформацією. До/після без слів, тільки музика і субтитри.",
+    caption: "Покажи 3 знаки пошкодженого волосся + один рядок про процедуру. Без продажу.",
+    hook: "«Порівняй своє волосся з цим» — перший кадр.",
+    cta: "Збережи, щоб показати майстру"
+  },
+  {
+    day: "02", weekday: "Вівторок",
+    theme: "Освіта — чим відрізняються процедури",
+    goals: ["trust"],
+    format: "Карусель · 5–7 слайдів",
+    content: "Слайд 1: «Кератин vs Ботокс vs Холодне відновлення». Порівняльна таблиця простими словами. Останній слайд — твій контакт.",
+    caption: "Коротко і без жаргону. Стиль — подружній, не науковий.",
+    hook: "«Свайпай → знайди свій тип»",
+    cta: "Напиши нам свій тип волосся — підберемо процедуру"
+  },
+  {
+    day: "03", weekday: "Середа",
+    theme: "Соціальний доказ — відгук клієнта",
+    goals: ["trust","sales"],
+    format: "Stories · 3–5 кадрів + пост",
+    content: "Stories: фото до/після + скріншот відгуку + стікер «А ти вже пробувала?». Пост: повний відгук + емоційний коментар від майстра.",
+    caption: "Акцент на емоцію клієнта, не на процедуру.",
+    hook: "«Вона прийшла з цим, а пішла ось з цим»",
+    cta: "Запишись за посиланням у профілі"
+  },
+  {
+    day: "04", weekday: "Четвер",
+    theme: "За лаштунками — процес",
+    goals: ["trust","reach"],
+    format: "Reels · 15–30 сек",
+    content: "Відео процесу нанесення: руки, волосся, текстура продукту. Естетика, ASMR-ефект, без балачок. Трендовий звук.",
+    caption: "Покажи деталі, які клієнт ніколи не бачить. Це викликає довіру і цікавість.",
+    hook: "Відкрита текстура продукту в перших 2 секундах.",
+    cta: "Зберігай і питай про ціну в директ"
+  },
+  {
+    day: "05", weekday: "П'ятниця",
+    theme: "Продаж — акція або пакет",
+    goals: ["sales"],
+    format: "Пост + Stories з таймером",
+    content: "«Тільки цього тижня — кератин + укладання в подарунок». Stories: таймер зворотного відліку + кнопка «Записатись».",
+    caption: "Одна чітка пропозиція. Ціна або «ціна від». Термін обмежений.",
+    hook: "«Останні 2 місця на цей тиждень»",
+    cta: "Пиши зараз — беремо запис у директ"
+  },
+  {
+    day: "06", weekday: "Субота",
+    theme: "Розваги + охоплення",
+    goals: ["reach"],
+    format: "Reels · Трендовий формат",
+    content: "«Типи волосся, які я бачу щодня» — гумористичний формат. Кучеряве непереможне, пряме але страждає тощо. Легко, без тиску.",
+    caption: "Більше гумору і впізнаваності — менше продажів. Мета: шер і збереження.",
+    hook: "«Який ти тип? Відповідай у коментарях»",
+    cta: "Відмічай подругу, якій це про неї"
+  },
+  {
+    day: "07", weekday: "Неділя",
+    theme: "Підсумок тижня + особисте",
+    goals: ["trust","reach"],
+    format: "Stories · 6–8 кадрів або пост",
+    content: "Скільки клієнтів прийняла, коротке відео «мій тиждень». Особиста деталь — чашка кави, музика в салоні. Тизер наступного тижня.",
+    caption: "Людяність і щирість = підписники стають клієнтами.",
+    hook: "«Ось яким був мій тиждень»",
+    cta: "Що хочеш побачити наступного тижня? Голосуй у Stories"
+  }
+];
+
+const goalMeta = {
+  sales: { label: "Продажі", cls: "goal-sales" },
+  trust: { label: "Довіра",  cls: "goal-trust" },
+  reach: { label: "Охоплення", cls: "goal-reach" }
+};
+
+const container = document.getElementById("days");
+
+data.forEach((d, i) => {
+  const card = document.createElement("div");
+  card.className = "day-card";
+  card.style.animationDelay = (i * 70) + "ms";
+
+  const tags = d.goals.map(g =>
+    `<span class="goal-tag ${goalMeta[g].cls}">${goalMeta[g].label}</span>`
+  ).join("");
+
+  card.innerHTML = `
+    <div class="day-header" role="button" aria-expanded="false">
+      <div class="day-num">День ${d.day}</div>
+      <div class="day-divider"></div>
+      <div class="day-info">
+        <div class="day-weekday">${d.weekday}</div>
+        <div class="day-theme">${d.theme}</div>
+      </div>
+      <div class="day-goals">${tags}</div>
+      <div class="day-arrow">
+        <svg viewBox="0 0 24 24" stroke-width="1.8"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="day-body-inner">
+        <div style="margin-top:4px;">
+          <span class="format-pill">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            ${d.format}
+          </span>
+        </div>
+        <div class="body-grid">
+          <div class="body-cell full">
+            <div class="cell-label">Контент</div>
+            <div class="cell-value">${d.content}</div>
+          </div>
+          <div class="body-cell">
+            <div class="cell-label">Капшн</div>
+            <div class="cell-value">${d.caption}</div>
+          </div>
+          <div class="body-cell">
+            <div class="cell-label">Гачок</div>
+            <div class="cell-value">${d.hook}</div>
+          </div>
+        </div>
+        <div class="cta-box">
+          <div class="cta-icon">→</div>
+          <div><strong style="font-weight:500">CTA:</strong> ${d.cta}</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const header = card.querySelector(".day-header");
+  const body   = card.querySelector(".day-body");
+
+  header.addEventListener("click", () => {
+    const isOpen = card.classList.contains("open");
+    // close all
+    document.querySelectorAll(".day-card.open").forEach(c => {
+      c.classList.remove("open");
+      c.querySelector(".day-body").style.maxHeight = null;
+      c.querySelector(".day-header").setAttribute("aria-expanded","false");
+    });
+    if (!isOpen) {
+      card.classList.add("open");
+      body.style.maxHeight = body.scrollHeight + "px";
+      header.setAttribute("aria-expanded","true");
+      setTimeout(() => {
+        card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 80);
+    }
+  });
+
+  container.appendChild(card);
+});
+
+// Progress bar
+window.addEventListener("scroll", () => {
+  const doc = document.documentElement;
+  const scroll = doc.scrollTop || document.body.scrollTop;
+  const height = doc.scrollHeight - doc.clientHeight;
+  document.getElementById("progress").style.width = (scroll / height * 100) + "%";
+});
+</script>
+</body>
+</html>
